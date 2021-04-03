@@ -91,14 +91,12 @@ makeInstr '^' prog = set direction up prog
 makeInstr 'v' prog = set direction down prog
 makeInstr '<' prog = set direction left prog
 makeInstr '>' prog = set direction right prog
-makeInstr '_' prog = 
-    if popFromStack prog == 0 || view stack prog == []
-        then set stack (myTail (view stack prog)) . set direction right $ prog
-        else set stack (myTail (view stack prog)) . set direction left $ prog
-makeInstr '|' prog = 
-    if popFromStack prog == 0 || view stack prog == []
-        then set stack (myTail (view stack prog)) . set direction down $ prog
-        else set stack (myTail (view stack prog)) . set direction up $ prog
+makeInstr '_' prog
+    | popFromStack prog == 0 = set stack (myTail (view stack prog)) . set direction right $ prog
+    | otherwise = set stack (myTail (view stack prog)) . set direction left $ prog
+makeInstr '|' prog
+    | popFromStack prog == 0 = set stack (myTail (view stack prog)) . set direction down $ prog
+    | otherwise = set stack (myTail (view stack prog)) . set direction up $ prog
 makeInstr '#' prog = makeStep prog
 makeInstr ':' prog = set stack newStack prog
     where newStack = popFromStack prog : popFromStack prog : myTail (view stack prog)
